@@ -313,7 +313,8 @@ public class Escanear extends AppCompatActivity {
             tvCodigo.setText(codigo);
             tvPrecio.setText(precioVenta);
             etStockP.setText(stock);
-            stockAnt=stock;
+
+            stockAnt=stock; //En esta variable tomo el valor del stock antes de los cambios
 
         }
         catch (MalformedURLException e) {
