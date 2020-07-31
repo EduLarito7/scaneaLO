@@ -55,6 +55,7 @@ public class Escanear extends AppCompatActivity {
     EditText etStockP;
     ImageView imgPrd;
     String host;
+    String stockAnt;
 
     public static final String KEY_User_Document1 = "image";
     private String Document_img1 = "";
@@ -312,7 +313,7 @@ public class Escanear extends AppCompatActivity {
             tvCodigo.setText(codigo);
             tvPrecio.setText(precioVenta);
             etStockP.setText(stock);
-
+            stockAnt=stock;
 
         }
         catch (MalformedURLException e) {
