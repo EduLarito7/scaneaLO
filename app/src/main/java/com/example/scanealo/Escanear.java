@@ -52,6 +52,7 @@ public class Escanear extends AppCompatActivity {
     EditText tvCodigoBarras;
     TextView tvNombre;
     EditText tvPrecio;
+    EditText etStockP;
     ImageView imgPrd;
     String host;
 
@@ -75,27 +76,12 @@ public class Escanear extends AppCompatActivity {
         tvCodigo = findViewById(R.id.tv1Codigo);
         tvPrecio = findViewById(R.id.tvPrecio1);
         imgPrd=findViewById(R.id.imgProducto1);
+        etStockP=findViewById(R.id.etStock);
 
         botonScanear.setOnClickListener(monClickListener);
 
         host = getString(R.string.host);
     }
-
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null){
-           if(result.getContents() != null)
-               //tvCodigoBarras.setText("El codigo de barras es:\n"+ result.getContents());
-                tvCodigoBarras.setText(result.getContents());
-
-            }else {
-                tvCodigoBarras.setText("ERROR AL SCANEAR");
-           }
-}*/
-
 
     private View.OnClickListener monClickListener = new View.OnClickListener(){
         @Override
@@ -260,7 +246,6 @@ public class Escanear extends AppCompatActivity {
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
-///////////////////////////////////////////////////
     public void getData(View v){
         //Dirección del servidor donde esta la base de datos, en este caso de nuestra máquina local
         String ws = host + "/post_producto.php?prdCodBarrasQr="+tvCodigoBarras.getText();
@@ -303,6 +288,7 @@ public class Escanear extends AppCompatActivity {
             String barras = "";
             String precioVenta = "";
             String rutaImg="";
+            String stock="";
 
             try {
                 JSONObject jsonResponse = new JSONObject(json);
@@ -312,33 +298,20 @@ public class Escanear extends AppCompatActivity {
                 barras =jsonResponse.getString("prdCodBarrasQr");
                 precioVenta =jsonResponse.getString("prdPrecioVenta");
                 rutaImg=jsonResponse.getString("prdImagen");
+                stock=jsonResponse.getString("prdExistencia");
+
 
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-/*
-            //Aquí ya obtenemos los datos de tipo Json
-            jsonArr = new JSONArray(json);
-
-
-            for (int i = 0; i<jsonArr.length();i++){
-                JSONObject objeto = jsonArr.getJSONObject(i);
-                nombre =objeto.optString("prdNombre");
-                codigo =objeto.optString("prdCodigo");
-                barras =objeto.optString("prdCodBarrasQr");
-                precioVenta =objeto.optString("prdPrecioVenta");
-                rutaImg=objeto.optString("prdImagen");
-            }
-            */
-
-
             new DownloadImageTask((ImageView) findViewById(R.id.imgProducto1)).execute(host+"/"+rutaImg);
 
             tvNombre.setText(nombre);
             tvCodigo.setText(codigo);
             tvPrecio.setText(precioVenta);
+            etStockP.setText(stock);
 
 
         }
