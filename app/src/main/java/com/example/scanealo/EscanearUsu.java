@@ -188,8 +188,6 @@ public class EscanearUsu extends AppCompatActivity {
                 barras =jsonResponse.getString("prdCodBarrasQr");
                 precioVenta =jsonResponse.getString("prdPrecioVenta");
                 rutaImg=jsonResponse.getString("prdImagen");
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
