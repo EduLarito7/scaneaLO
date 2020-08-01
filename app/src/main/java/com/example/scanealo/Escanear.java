@@ -95,7 +95,9 @@ public class Escanear extends AppCompatActivity {
             }
         }
     };
+
     static final int REQUEST_TAKE_PHOTO = 1;
+
     public void selectImage(View v) {
         IS_CAMMERA = true;
         final CharSequence[] options = {"Tomar foto", "Escoger de Galería", "Cancelar"};
