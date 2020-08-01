@@ -35,9 +35,10 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     EditText etUs, etClv;
-    Button btlogin;
+    Button btlogin, tvRegistrar;
     String usuario, password;
     String host;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +47,14 @@ public class MainActivity extends AppCompatActivity {
         etUs = findViewById(R.id.etUsuario);
         etClv = findViewById(R.id.etClave);
         btlogin= findViewById(R.id.btnLogin);
-
+        tvRegistrar= findViewById(R.id.btnRegistrar);
         host= getString(R.string.host);
 
+        tvRegistrar = findViewById(R.id.btnRegistrar);
         //recupero los últimos datos ingresados correctamente
         recuperarPreferencias();
+
+
 
         btlogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,8 +66,10 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(MainActivity.this, "Por favor ingrese los datos de Usuario/Clave",Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
+
 
     }
 
@@ -145,6 +151,12 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences=getSharedPreferences("preferenciasLogin",Context.MODE_PRIVATE);
         etUs.setText(preferences.getString("usuarioApp","Usuario"));
         etClv.setText(preferences.getString("passwordApp","Contraseña"));
+    }
+
+
+    public void registroUsu(View v){
+        Intent internetReg = new Intent(MainActivity.this,RegistrarUsuario.class);
+        startActivity(internetReg);
     }
 
 }

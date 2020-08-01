@@ -22,7 +22,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EscanearUsu"></activity>
+        <activity android:name=".RegisterRequest"></activity>
+        <activity android:name=".RegistrarUsuario" />
+        <activity android:name=".EscanearUsu" />
         <activity android:name=".PresentacionActivity" />
         <activity android:name=".Escanear" />
         <activity android:name=".MainActivity">
