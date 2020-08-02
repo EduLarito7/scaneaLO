@@ -93,8 +93,8 @@
 
     <LinearLayout
         android:id="@+id/linearLayout6"
-        android:layout_width="394dp"
-        android:layout_height="46dp"
+        android:layout_width="381dp"
+        android:layout_height="48dp"
         android:layout_marginBottom="29dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
