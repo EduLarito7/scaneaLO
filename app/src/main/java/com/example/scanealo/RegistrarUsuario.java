@@ -55,8 +55,6 @@ public class RegistrarUsuario extends AppCompatActivity implements View.OnClickL
         final String ufecha="20200805";
 
 
-
-
         Response.Listener<String>respoListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

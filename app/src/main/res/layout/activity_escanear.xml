@@ -9,7 +9,7 @@
     <Button
         android:id="@+id/btnScanner1"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="45dp"
         android:layout_marginEnd="16dp"
@@ -66,7 +66,7 @@
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
@@ -94,8 +94,8 @@
     <LinearLayout
         android:id="@+id/linearLayout6"
         android:layout_width="394dp"
-        android:layout_height="46dp"
-        android:layout_marginBottom="29dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
         app:layout_constraintEnd_toEndOf="parent"
@@ -120,8 +120,9 @@
     <LinearLayout
         android:id="@+id/linearLayout7"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="18dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="1dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,13 +145,24 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:textSize="18sp" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout8"
         android:layout_width="330dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="14dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
         app:layout_constraintStart_toStartOf="parent"
@@ -176,20 +188,22 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="2dp"
         android:text="Actualizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
 
     <LinearLayout
         android:id="@+id/linearLayout9"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="40dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="2dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"

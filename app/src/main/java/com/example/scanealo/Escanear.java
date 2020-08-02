@@ -5,6 +5,7 @@ import androidx.core.content.FileProvider;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -44,10 +60,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Escanear extends AppCompatActivity {
 
-    Button botonScanear;
+    Button botonScanear,btnActualizar;
     TextView tvCodigo;
     EditText tvCodigoBarras;
     TextView tvNombre;
@@ -60,11 +78,8 @@ public class Escanear extends AppCompatActivity {
     public static final String KEY_User_Document1 = "image";
     private String Document_img1 = "";
     private String photoNameTemp;
-
     private Boolean IS_SCANNER = false;
     private Boolean IS_CAMMERA = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +93,16 @@ public class Escanear extends AppCompatActivity {
         tvPrecio = findViewById(R.id.tvPrecio1);
         imgPrd=findViewById(R.id.imgProducto1);
         etStockP=findViewById(R.id.etStock);
+        btnActualizar=findViewById(R.id.button);
 
         botonScanear.setOnClickListener(monClickListener);
+
+        btnActualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actualizarProducto(host+"/actualiza_prd.php");
+            }
+        });
 
         host = getString(R.string.host);
     }
@@ -345,4 +368,283 @@ public class Escanear extends AppCompatActivity {
     }
 
 */
+
+
+    public void GuardarProducto(View v) {
+        final ProgressDialog loading = new ProgressDialog(Escanear.this);
+        loading.setMessage("Procesando...");
+        loading.show();
+        loading.setCanceledOnTouchOutside(false);
+        RetryPolicy mRetryPolicy = new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, host + "/post_producto",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            loading.dismiss();
+                            Log.d("JSON", response);
+
+                            JSONObject eventObject = new JSONObject(response);
+                            String error_status = eventObject.getString("error");
+
+                            if (error_status.equals("true")) {
+                                String error_msg = eventObject.getString("msg");
+                                ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                                alertDialogBuilder.setTitle("Error en el servidor");
+                                alertDialogBuilder.setCancelable(false);
+                                alertDialogBuilder.setMessage(error_msg);
+                                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+
+                                    }
+                                });
+                                alertDialogBuilder.show();
+
+                            } else {
+                                String error_msg = eventObject.getString("msg");
+                                ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+
+                                alertDialogBuilder.setTitle("Registro");
+                                alertDialogBuilder.setCancelable(false);
+                                alertDialogBuilder.setMessage(error_msg);
+
+                                final String idMascota = eventObject.getString("idMascota");
+                                final String nombre = eventObject.getString("nombre");
+//                                alertDialogBuilder.setIcon(R.drawable.doubletick);
+
+                                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Intent ide = new Intent(Escanear.this, confirmacionGuardado.class);
+                                        ide.putExtra("idMascota", idMascota);
+                                        ide.putExtra("nombre", nombre);
+                                        startActivity(ide);
+                                        finish();
+                                    }
+                                });
+                                alertDialogBuilder.show();
+                            }
+                        } catch (Exception e) {
+                            Log.d("Tag", e.getMessage());
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        loading.dismiss();
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                            alertDialogBuilder.setTitle("No connection");
+                            alertDialogBuilder.setMessage(" Connection time out error please try again ");
+                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                            alertDialogBuilder.show();
+                        } else if (error instanceof AuthFailureError) {
+                            ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                            alertDialogBuilder.setTitle("Connection Error");
+                            alertDialogBuilder.setMessage(" Authentication failure connection error please try again ");
+                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                            alertDialogBuilder.show();
+                            //TODO
+                        } else if (error instanceof ServerError) {
+                            ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                            alertDialogBuilder.setTitle("Connection Error");
+                            alertDialogBuilder.setMessage("Connection error please try again");
+                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                            alertDialogBuilder.show();
+                            //TODO
+                        } else if (error instanceof NetworkError) {
+                            ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                            alertDialogBuilder.setTitle("Connection Error");
+                            alertDialogBuilder.setMessage("Network connection error please try again");
+                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                            alertDialogBuilder.show();
+                            //TODO
+                        } else if (error instanceof ParseError) {
+                            ContextThemeWrapper ctw = new ContextThemeWrapper(Escanear.this, R.style.ThemeOverlay_AppCompat_Dialog_Alert);
+                            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctw);
+                            alertDialogBuilder.setTitle("Error");
+                            alertDialogBuilder.setMessage("Parse error");
+                            alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+
+                                }
+                            });
+                            alertDialogBuilder.show();
+                        }
+//                        Toast.makeText(Login_Activity.this,error.toString(), Toast.LENGTH_LONG ).show();
+                    }
+                }) {
+
+ /*
+            @Override
+
+     TextView tvCodigo;
+    EditText tvCodigoBarras;
+    TextView tvNombre;
+    EditText tvPrecio;
+    EditText etStockP;
+
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("id", Integer.toString(idUsuario));
+                map.put("nombre", etMasNombre.getText().toString());
+                map.put("edad_anios", etMasAnos.getText().toString());
+                map.put("edad_meses", etMasMeses.getText().toString());
+                map.put("raza", spMasRaza.getSelectedItem().toString());
+                map.put("genero", spMasGenero.getSelectedItem().toString());
+                map.put("color", etMasColor.getText().toString());
+                map.put("alergias", etMasAlergias.getText().toString());
+                map.put("peso", spMasPeso.getSelectedItem().toString());
+                map.put("descripcion", etMasDescripcion.getText().toString());
+                map.put(KEY_User_Document1, Document_img1);
+                return map;
+            }
+ */
+
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        stringRequest.setRetryPolicy(mRetryPolicy);
+        requestQueue.add(stringRequest);
+    }
+
+
+    private void actualizarProducto(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!response.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Producto Actualizado Correctamente", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+
+            String nombreImg = "";
+
+            @Override
+
+            //Obtiene los parametros que necesitamos del WEB Service
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
+                parametros.put("prdExistencia", etStockP.getText().toString());
+                parametros.put("prdImagen", nombreImg);
+                parametros.put("prdCodigo", tvCodigo.getText().toString());
+                return parametros;
+
+                //if(stockAnt==etStockP.getText().toString()){
+                //    Toast.makeText(getApplicationContext(), "Se requiere realizar Ajuste", Toast.LENGTH_SHORT).show();
+                //}
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void insertarAjuste(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!response.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Producto Actualizado Correctamente", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+
+            String nombreImg = "";
+
+            @Override
+
+            //Obtiene los parametros que necesitamos del WEB Service
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
+                parametros.put("prdExistencia", etStockP.getText().toString());
+                parametros.put("prdImagen", nombreImg);
+                parametros.put("prdCodigo", tvCodigo.getText().toString());
+                return parametros;
+
+                //if(stockAnt==etStockP.getText().toString()){
+                //    Toast.makeText(getApplicationContext(), "Se requiere realizar Ajuste", Toast.LENGTH_SHORT).show();
+                //}
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    private void insertarAjusteDet(String URL) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (!response.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Producto Actualizado Correctamente", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+
+            String nombreImg = "";
+
+            @Override
+
+            //Obtiene los parametros que necesitamos del WEB Service
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
+                parametros.put("prdExistencia", etStockP.getText().toString());
+                parametros.put("prdImagen", nombreImg);
+                parametros.put("prdCodigo", tvCodigo.getText().toString());
+                return parametros;
+
+                //if(stockAnt==etStockP.getText().toString()){
+                //    Toast.makeText(getApplicationContext(), "Se requiere realizar Ajuste", Toast.LENGTH_SHORT).show();
+                //}
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+
 }
