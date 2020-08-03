@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -59,8 +60,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class Escanear extends AppCompatActivity {
@@ -587,16 +590,26 @@ public class Escanear extends AppCompatActivity {
         }) {
 
             String nombreImg = "";
+            Date c = Calendar.getInstance().getTime();
+            //System.out.println("Current time => " + c);
+
+            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+            String formattedDate = df.format(c);
+
+            String fechaActual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+            String tvNombreDispositivo= obtenerNombreDeDispositivo() ;
 
             @Override
 
             //Obtiene los parametros que necesitamos del WEB Service
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
-                parametros.put("prdExistencia", etStockP.getText().toString());
-                parametros.put("prdImagen", nombreImg);
-                parametros.put("prdCodigo", tvCodigo.getText().toString());
+                parametros.put("ajuFecha", fechaActual);
+                parametros.put("ajuTipo", "1");
+                parametros.put("ajuEstado", "1");
+                parametros.put("usuario", tvCodigo.getText().toString());
+                parametros.put("equipo", tvCodigo.getText().toString());
                 return parametros;
 
                 //if(stockAnt==etStockP.getText().toString()){
@@ -646,5 +659,26 @@ public class Escanear extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    public String obtenerNombreDeDispositivo() {
+        String fabricante = Build.MANUFACTURER;
+        String modelo = Build.MODEL;
+        if (modelo.startsWith(fabricante)) {
+            return primeraLetraMayuscula(modelo);
+        } else {
+            return primeraLetraMayuscula(fabricante) + " " + modelo;
+        }
+    }
 
+
+    private String primeraLetraMayuscula(String cadena) {
+        if (cadena == null || cadena.length() == 0) {
+            return "";
+        }
+        char primeraLetra = cadena.charAt(0);
+        if (Character.isUpperCase(primeraLetra)) {
+            return cadena;
+        } else {
+            return Character.toUpperCase(primeraLetra) + cadena.substring(1);
+        }
+    }
 }
