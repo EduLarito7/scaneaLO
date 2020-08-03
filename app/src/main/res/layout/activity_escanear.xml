@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,11 +9,11 @@
     <Button
         android:id="@+id/btnScanner1"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="0dp"
         android:layout_marginStart="12dp"
         android:layout_marginTop="45dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="53dp"
+        android:layout_marginBottom="52dp"
         android:text="ESCANEAR"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
         app:layout_constraintEnd_toStartOf="@+id/imgProducto1"
@@ -27,7 +26,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="132dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="15dp"
         android:contentDescription="@string/app_name"
         android:src="@drawable/logoapp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
@@ -37,13 +36,15 @@
 
     <LinearLayout
         android:id="@+id/linearLayout4"
-        android:layout_width="381dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginBottom="28dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="24dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
         <Button
@@ -67,8 +68,8 @@
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,19 +95,25 @@
 
     <LinearLayout
         android:id="@+id/linearLayout6"
+<<<<<<< HEAD
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginBottom="2dp"
+=======
+        android:layout_width="357dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="38dp"
+>>>>>>> 33200389fd7b02fd61ca483737d56069f07bc44f
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
 
         <TextView
             android:id="@+id/textView131"
-            android:layout_width="112dp"
-            android:layout_height="34dp"
+            android:layout_width="96dp"
+            android:layout_height="35dp"
             android:text="@string/tvNombre"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -120,20 +127,19 @@
 
     <LinearLayout
         android:id="@+id/linearLayout7"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="1dp"
+        android:layout_width="223dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="26dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
 
         <TextView
             android:id="@+id/textView17"
-            android:layout_width="110dp"
-            android:layout_height="34dp"
+            android:layout_width="87dp"
+            android:layout_height="35dp"
             android:layout_marginStart="12dp"
             android:text="@string/tvPrecio"
             android:textSize="18sp"
@@ -141,29 +147,20 @@
 
         <EditText
             android:id="@+id/tvPrecio1"
-            android:layout_width="111dp"
+            android:layout_width="246dp"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
             android:textSize="18sp" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout8"
-        android:layout_width="330dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="227dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="29dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
         app:layout_constraintStart_toStartOf="parent"
@@ -171,8 +168,8 @@
 
         <TextView
             android:id="@+id/textView11"
-            android:layout_width="105dp"
-            android:layout_height="36dp"
+            android:layout_width="83dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="@string/tvCodigo"
             android:textSize="18sp"
@@ -189,25 +186,21 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:layout_marginBottom="2dp"
         android:text="Actualizar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout9" />
 
     <LinearLayout
         android:id="@+id/linearLayout9"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="2dp"
+        android:layout_width="201dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="11dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
 
@@ -221,8 +214,8 @@
 
         <EditText
             android:id="@+id/etStock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPersonName" />
