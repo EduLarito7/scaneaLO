@@ -47,6 +47,7 @@ import com.google.zxing.integration.android.IntentResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -346,6 +347,7 @@ public class Escanear extends AppCompatActivity {
                 barras =jsonResponse.getString("prdCodBarrasQr");
                 precioVenta =jsonResponse.getString("prdPrecioVenta");
                 rutaImg=jsonResponse.getString("prdImagen");
+                Document_img1 = rutaImg;
                 stock=jsonResponse.getString("prdExistencia");
 
 
@@ -576,10 +578,13 @@ public class Escanear extends AppCompatActivity {
 
             //Obtiene los parametros que necesitamos del WEB Service
             protected Map<String, String> getParams() throws AuthFailureError {
+                System.out.println("*********************************************");
+                System.out.println(Document_img1);
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
                 parametros.put("prdExistencia", etStockP.getText().toString());
-                parametros.put("prdImagen", "/img"+tvCodigo.getText().toString()+".png");
+                parametros.put("prdImagen", Document_img1);
+//                parametros.put("prdImagen", tvCodigo.getText().toString()+".png");
                 parametros.put("prdCodigo", tvCodigo.getText().toString());
                 return parametros;
 
