@@ -37,11 +37,6 @@ public class RegistrarUsuario extends AppCompatActivity implements View.OnClickL
         usuApellido = findViewById(R.id.editApellido);
         usuEmail = findViewById(R.id.editEmail);
 
-
-
-
-
-
     }
 
 

@@ -77,6 +77,9 @@ public class Escanear extends AppCompatActivity {
     ImageView imgPrd;
     String host;
     String stockAnt;
+    String num_ajuste;
+    String cantReal;
+    String equipoTrab;
 
     public static final String KEY_User_Document1 = "image";
     private String Document_img1 = "";
@@ -104,6 +107,22 @@ public class Escanear extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 actualizarProducto(host+"/actualiza_prd.php");
+
+                //Hacemos el registro del Ajuste de inventario siempre que el Stock sea diferente al leido
+
+                if( Integer.parseInt(stockAnt) < Integer.parseInt(etStockP.getText().toString())){
+                    insertarAjuste(host+"/insertar_invAjuste.php");
+                    equipoTrab="";
+                    consultaAjusteNumero(host+"/consultaNumAjuste.php");
+                    cantReal=String.valueOf(Integer.parseInt(stockAnt) - Integer.parseInt(etStockP.getText().toString()));
+                }
+
+                if( Integer.parseInt(stockAnt) > Integer.parseInt(etStockP.getText().toString())){
+                    insertarAjuste(host+"/insertar_invAjuste.php");
+                    consultaAjusteNumero(host+"/consultaNumAjuste.php");
+                    cantReal=String.valueOf(Integer.parseInt(stockAnt) - Integer.parseInt(etStockP.getText().toString()));
+                }
+
             }
         });
 
@@ -560,7 +579,7 @@ public class Escanear extends AppCompatActivity {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
                 parametros.put("prdExistencia", etStockP.getText().toString());
-                parametros.put("prdImagen", nombreImg);
+                parametros.put("prdImagen", "/img"+tvCodigo.getText().toString()+".png");
                 parametros.put("prdCodigo", tvCodigo.getText().toString());
                 return parametros;
 
@@ -578,7 +597,7 @@ public class Escanear extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if (!response.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Producto Actualizado Correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ajuste Ingresado Correctamente", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -589,11 +608,10 @@ public class Escanear extends AppCompatActivity {
             }
         }) {
 
-            String nombreImg = "";
             Date c = Calendar.getInstance().getTime();
             //System.out.println("Current time => " + c);
 
-            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDate = df.format(c);
 
             String fechaActual = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
@@ -608,8 +626,8 @@ public class Escanear extends AppCompatActivity {
                 parametros.put("ajuFecha", fechaActual);
                 parametros.put("ajuTipo", "1");
                 parametros.put("ajuEstado", "1");
-                parametros.put("usuario", tvCodigo.getText().toString());
-                parametros.put("equipo", tvCodigo.getText().toString());
+                parametros.put("usuario", "1");
+                parametros.put("equipo", equipoTrab);
                 return parametros;
 
                 //if(stockAnt==etStockP.getText().toString()){
@@ -626,7 +644,7 @@ public class Escanear extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if (!response.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Producto Actualizado Correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Ajuste Realizado Correctamente", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -637,17 +655,16 @@ public class Escanear extends AppCompatActivity {
             }
         }) {
 
-            String nombreImg = "";
-
             @Override
 
             //Obtiene los parametros que necesitamos del WEB Service
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
-                parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
-                parametros.put("prdExistencia", etStockP.getText().toString());
-                parametros.put("prdImagen", nombreImg);
-                parametros.put("prdCodigo", tvCodigo.getText().toString());
+                parametros.put("adeproducto", tvCodigo.getText().toString());
+                parametros.put("adeExistencia", stockAnt);
+                parametros.put("adeCantReal", etStockP.getText().toString());
+                parametros.put("adePrecio", tvPrecio.getText().toString());
+                parametros.put("ajuNumero", num_ajuste);
                 return parametros;
 
                 //if(stockAnt==etStockP.getText().toString()){
@@ -659,9 +676,56 @@ public class Escanear extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void consultaAjusteNumero(String URL){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(!response.isEmpty()){
+
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        num_ajuste =jsonResponse.getString("num_ajuste");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    insertarAjuste(host+"/insertar_invAjusteDet.php");
+
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "Se produjeron errores al insertar Ajuste", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+
+            //Obtiene los parametros que necesitamos del WEB Service
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> parametros = new HashMap<String,String>();
+                //En estas líneas se pueden llenar los datos recuperados de preferencias
+                return parametros;
+            }
+        };
+
+
+
+        //Ejecuta el web Service
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        //Peticiones desde la APP
+        requestQueue.add(stringRequest);
+
+    }
+
+
     public String obtenerNombreDeDispositivo() {
         String fabricante = Build.MANUFACTURER;
         String modelo = Build.MODEL;
+        equipoTrab=fabricante + " - " + modelo;
         if (modelo.startsWith(fabricante)) {
             return primeraLetraMayuscula(modelo);
         } else {
