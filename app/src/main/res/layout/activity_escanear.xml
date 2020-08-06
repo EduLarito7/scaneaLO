@@ -90,7 +90,8 @@
             android:layout_height="43dp"
             android:ems="10"
             android:hint="CodBarras / QR"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            tools:text="7861021322181" />
     </LinearLayout>
 
     <LinearLayout

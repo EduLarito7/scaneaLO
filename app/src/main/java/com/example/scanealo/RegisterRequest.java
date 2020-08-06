@@ -16,15 +16,14 @@ import java.util.Map;
 
 public class RegisterRequest extends StringRequest {
 
-
-
-    public static final String REGISTER_REQUEST_URL = "http://192.168.1.3/scaneaLo/Register.php";
+//    public static final String REGISTER_REQUEST_URL = "http://192.168.1.3/scaneaLo/Register.php";
     private Map<String,String> params;
 
 
-    public RegisterRequest(String usuLogin, String usuClave, String usuNombre, String usuApellido,
+    public RegisterRequest(String host,String usuLogin, String usuClave, String usuNombre, String usuApellido,
                            String usuEmail, String usuEstado, String usuFechaCrea , String usuTipo, Response.Listener<String> listener) {
-        super(Method.POST,REGISTER_REQUEST_URL,listener,null);
+//        super(Method.POST,REGISTER_REQUEST_URL,listener,null);
+        super(Method.POST,host,listener,null);
 
 
 

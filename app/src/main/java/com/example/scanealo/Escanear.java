@@ -78,7 +78,6 @@ public class Escanear extends AppCompatActivity {
     ImageView imgPrd;
     String host;
     String stockAnt;
-    String num_ajuste;
     String cantReal;
     String equipoTrab;
 
@@ -112,8 +111,8 @@ public class Escanear extends AppCompatActivity {
                 //Hacemos el registro del Ajuste de inventario siempre que el Stock sea diferente al leido
 
                 if( Integer.parseInt(stockAnt) < Integer.parseInt(etStockP.getText().toString())){
-                    insertarAjuste(host+"/insertar_invAjuste.php");
                     equipoTrab="";
+                    insertarAjuste(host+"/insertar_invAjuste.php");
                     consultaAjusteNumero(host+"/consultaNumAjuste.php");
                     cantReal=String.valueOf(Integer.parseInt(stockAnt) - Integer.parseInt(etStockP.getText().toString()));
                 }
@@ -296,6 +295,7 @@ public class Escanear extends AppCompatActivity {
     }
 
     public void getData(View v){
+
         //Dirección del servidor donde esta la base de datos, en este caso de nuestra máquina local
         String ws = host + "/post_producto.php?prdCodBarrasQr="+tvCodigoBarras.getText();
 
@@ -341,7 +341,6 @@ public class Escanear extends AppCompatActivity {
 
             try {
                 JSONObject jsonResponse = new JSONObject(json);
-                //nombre =jsonResponse.getString("UsuTipo");
                 nombre =jsonResponse.getString("prdNombre");
                 codigo =jsonResponse.getString("prdCodigo");
                 barras =jsonResponse.getString("prdCodBarrasQr");
@@ -362,7 +361,6 @@ public class Escanear extends AppCompatActivity {
             tvCodigo.setText(codigo);
             tvPrecio.setText(precioVenta);
             etStockP.setText(stock);
-
             stockAnt=stock; //En esta variable tomo el valor del stock antes de los cambios
 
         }
@@ -375,23 +373,6 @@ public class Escanear extends AppCompatActivity {
         }*/
 
     }
-
-
-
-
-/*
-
-    public void consumirServicio(View v){
-        String cedula= tvCodigogetText().toString();
-        String nombre= et2.getText().toString();
-        String apellido= et3.getText().toString();
-        int edad= Integer.parseInt( et4.getText().toString());
-        post servicioTask= new post(this,"http://192.168.1.3/rest/post.php",cedula,nombre,apellido, edad);
-        servicioTask.execute();
-
-    }
-
-*/
 
 
     public void GuardarProducto(View v) {
@@ -578,8 +559,8 @@ public class Escanear extends AppCompatActivity {
 
             //Obtiene los parametros que necesitamos del WEB Service
             protected Map<String, String> getParams() throws AuthFailureError {
-                System.out.println("*********************************************");
-                System.out.println(Document_img1);
+                //System.out.println("*********************************************");
+                //System.out.println(Document_img1);
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("prdPrecioVenta", tvPrecio.getText().toString());
                 parametros.put("prdExistencia", etStockP.getText().toString());
@@ -644,12 +625,12 @@ public class Escanear extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void insertarAjusteDet(String URL) {
+    private void insertarAjusteDet(String URL, final String numAjuste) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (!response.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Ajuste Realizado Correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Detalle de Ajuste Realizado Correctamente", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -669,7 +650,7 @@ public class Escanear extends AppCompatActivity {
                 parametros.put("adeExistencia", stockAnt);
                 parametros.put("adeCantReal", etStockP.getText().toString());
                 parametros.put("adePrecio", tvPrecio.getText().toString());
-                parametros.put("ajuNumero", num_ajuste);
+                parametros.put("ajuNumero", numAjuste);
                 return parametros;
 
                 //if(stockAnt==etStockP.getText().toString()){
@@ -686,6 +667,7 @@ public class Escanear extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if(!response.isEmpty()){
+                    String num_ajuste="";
 
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
@@ -694,7 +676,7 @@ public class Escanear extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    insertarAjuste(host+"/insertar_invAjusteDet.php");
+                    insertarAjusteDet(host+"/insertar_invAjusteDet.php",num_ajuste);
 
 
                 }else{

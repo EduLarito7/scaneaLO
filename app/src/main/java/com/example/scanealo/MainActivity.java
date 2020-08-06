@@ -128,8 +128,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
-
         //Ejecuta el web Service
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         //Peticiones desde la APP
@@ -158,5 +156,6 @@ public class MainActivity extends AppCompatActivity {
         Intent internetReg = new Intent(MainActivity.this,RegistrarUsuario.class);
         startActivity(internetReg);
     }
+
 
 }

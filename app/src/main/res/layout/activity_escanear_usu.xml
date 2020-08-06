@@ -56,13 +56,14 @@
             android:layout_width="128dp"
             android:layout_height="34dp"
             android:text="PRECIO:"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvPrecio1"
             android:layout_width="129dp"
             android:layout_height="36dp"
-            android:text="TextView"
+            android:hint="Precio"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -101,8 +102,8 @@
         <TextView
             android:id="@+id/tv1Nombre1"
             android:layout_width="279dp"
+            android:hint="Descripcion"
             android:layout_height="39dp"
-            android:text="TextView"
             android:textSize="18sp" />
     </LinearLayout>
 
